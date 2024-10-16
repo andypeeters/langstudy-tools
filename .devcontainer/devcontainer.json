@@ -3,31 +3,41 @@
 {
 	"name": "C# (.NET)",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/dotnet:1-8.0-bookworm",
+	"build": {
+		"dockerfile":"Dockerfile"
+	},
 
-	// Features to add to the dev container. More info: https://containers.dev/features.
-	// "features": {},
+	"customizations": {
+        "vscode": {
+            "extensions": [
+            	"ms-dotnettools.vscode-dotnet-runtime",
+				"ms-dotnettools.csharp",
+				"dbaeumer.vscode-eslint",
+				"ms-dotnettools.csdevkit"
+            ]
+        }
+	},
 
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [5000, 5001],
-	// "portsAttributes": {
-	//		"5001": {
-	//			"protocol": "https"
-	//		}
-	// }
-
-	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "dotnet new install Avalonia.Templates",
-
-	// Configure tool-specific properties.
-	// "customizations": {},
-
-	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+	// Mount Wayland targets.
+	"mounts": [
+		"source=/dev/dri,target=/dev/dri,type=bind",
+		"source=/dev/snd,target=/dev/snd,type=bind",
+		"source=/etc/asound.conf,target=/etc/asound.conf,type=bind",
+    ],
 
 	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,Z",
 	"workspaceFolder": "/workspace",
 
-	"runArgs": [ "--userns=keep-id" ],
+	"runArgs": [
+		"--userns=keep-id",
+
+		"--privileged",
+        
+        // Add some groups for dri and snd access.
+		"--group-add", "17",
+		"--group-add", "26",
+		"--group-add", "303"
+	],
+	
 	"containerUser": "vscode"
 }
