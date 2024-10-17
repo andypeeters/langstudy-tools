@@ -18,25 +18,34 @@
         }
 	},
 
+	"containerEnv": {
+		"XDG_RUNTIME_DIR": "/tmp",
+		"WAYLAND_DISPLAY": "${localEnv:WAYLAND_DISPLAY}",
+        "DISPLAY": "${localEnv:DISPLAY}",
+		"XDG_SESSION_TYPE": "wayland",
+		"QT_QPA_PLATFORM": "wayland",
+		"GDK_BACKEND": "wayland",
+		"SDL_VIDEODRIVER": "wayland",
+		"ELM_DISPLAY": "wl",
+		"ELM_ACCEL": "opengl",
+		"ECORE_EVAS_ENGINE": "wayland_egl"
+    },
+
 	// Mount Wayland targets.
 	"mounts": [
 		"source=/dev/dri,target=/dev/dri,type=bind",
 		"source=/dev/snd,target=/dev/snd,type=bind",
-		"source=/etc/asound.conf,target=/etc/asound.conf,type=bind",
+		"source=/etc/asound.conf,target=/etc/asound.conf,type=bind"
     ],
 
 	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,Z",
 	"workspaceFolder": "/workspace",
 
 	"runArgs": [
-		"--userns=keep-id",
+		"--userns=keep-id"
 
-		"--privileged",
-        
-        // Add some groups for dri and snd access.
-		"--group-add", "17",
-		"--group-add", "26",
-		"--group-add", "303"
+		// Mount additonal Wayland target.
+		//"-v $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:/tmp/$WAYLAND_DISPLAY"
 	],
 	
 	"containerUser": "vscode"
