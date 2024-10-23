@@ -35,7 +35,10 @@
 	"mounts": [
 		"source=/dev/dri,target=/dev/dri,type=bind",
 		"source=/dev/snd,target=/dev/snd,type=bind",
-		"source=/etc/asound.conf,target=/etc/asound.conf,type=bind"
+		"source=/etc/asound.conf,target=/etc/asound.conf,type=bind",
+
+		// Mount additional Wayland target.
+		"source=${localEnv:XDG_RUNTIME_DIR}/${localEnv:WAYLAND_DISPLAY},target=/tmp/${localEnv:WAYLAND_DISPLAY},type=bind"
     ],
 
 	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,Z",
@@ -43,9 +46,6 @@
 
 	"runArgs": [
 		"--userns=keep-id"
-
-		// Mount additonal Wayland target.
-		//"-v $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:/tmp/$WAYLAND_DISPLAY"
 	],
 	
 	"containerUser": "vscode"
