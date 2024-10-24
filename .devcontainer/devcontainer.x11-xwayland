@@ -1,27 +1,10 @@
-// This devcontainer file uses a build-in desktop.
-// Can be accessed via a remote desktop connection tool like VNC.
+// This devcontainer file mounts to XWayland.
+// TODO: this is not yet working!
 {
 	"name": "C# (.NET)",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"build": {
 		"dockerfile":"Dockerfile"
-	},
-
-	// Info: https://github.com/devcontainers/features/tree/main/src/desktop-lite
-	"features": {
-		"ghcr.io/devcontainers/features/desktop-lite:1": {
-			"password": "vscode"
-		}
-	},
-
-	"forwardPorts": [ 6080, 5901 ],
-	"portsAttributes": {
-		"6080": {
-			"label": "desktop"
-		},
-		"5901": {
-			"label": "vnc-desktop"
-		}
 	},
 
 	"customizations": {
@@ -34,6 +17,17 @@
             ]
         }
 	},
+
+	"containerEnv": {
+		"DISPLAY": "${localEnv:DISPLAY}",
+		"XAUTHORITY": "/tmp/.Xauthority"
+    },
+
+	"mounts": [
+		// Mount XWayland target.
+		"source=${localEnv:XAUTHORITY},target=/tmp/.Xauthority,type=bind",
+		"source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,consistency=cached"
+    ],
 
 	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,Z",
 	"workspaceFolder": "/workspace",
